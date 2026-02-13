@@ -38,3 +38,15 @@ EasyRespawn.ResurrectPct = 1
 #
 
 EasyRespawn.DisabledMapIds =
+
+#
+#    EasyRespawn.InstanceRespawnLocation
+#        Description: Determines where the player respawns when resurrecting inside an instance.
+#        Values: 1 - respawns inside the instance right at the entrance
+#                2 - respawns outside the instance right at the entrance
+#        Default: 2
+#        Note: this is using internal AzerothCore area trigger storage to find the "go back" location for each instance (both for inside and outside). Outside triggers are not found
+#              for some instances (for example ICC), so in this case if EasyRespawn.InstanceRespawnLocation is 2, the player will be resurrected inside the instance (acts as if it was set to 1).
+#
+
+EasyRespawn.InstanceRespawnLocation = 2

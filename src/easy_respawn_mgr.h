@@ -16,6 +16,12 @@ enum ResurrectMapMask
     MAP_MASK_ALL        = MAP_MASK_DUNGEON | MAP_MASK_RAID | MAP_MASK_OPEN_WORLD
 };
 
+enum InstanceRespawnLocation
+{
+    RESPAWN_INSIDE = 1,
+    RESPAWN_OUTSIDE
+};
+
 class EasyRespawnMgr
 {
 private:
@@ -25,6 +31,7 @@ private:
     int32 resurrectMapMask;
     float resurrectHealthPct;
     std::set<int32> disabledMapIds;
+    InstanceRespawnLocation instanceRespawnLocation;
 
     bool IsValidResurrectMapMask(const Player* player) const;
     void Resurrect(Player* player) const;
@@ -35,7 +42,12 @@ public:
     static EasyRespawnMgr* instance();
 
     bool RespawnAndTeleport(Player* player) const;
-    void HandleConfigSettings(int32 resurrectMapMask, float resurrectHealthPct, const std::string& disabledMapIdsStr);
+    void HandleConfigSettings(
+        int32 resurrectMapMask,
+        float resurrectHealthPct,
+        const std::string& disabledMapIdsStr,
+        int32 instanceRespawnLocation
+    );
 };
 
 #define sEasyRespawnMgr EasyRespawnMgr::instance()

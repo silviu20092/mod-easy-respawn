@@ -20,7 +20,8 @@ public:
         sEasyRespawnMgr->HandleConfigSettings(
             sConfigMgr->GetOption<int32>("EasyRespawn.ResurrectMapMask", MAP_MASK_ALL),
             sConfigMgr->GetOption<float>("EasyRespawn.ResurrectPct", 1.0f),
-            sConfigMgr->GetOption<std::string>("EasyRespawn.DisabledMapIds", "")
+            sConfigMgr->GetOption<std::string>("EasyRespawn.DisabledMapIds", ""),
+            sConfigMgr->GetOption<int32>("EasyRespawn.InstanceRespawnLocation", RESPAWN_OUTSIDE)
         );
     }
 };

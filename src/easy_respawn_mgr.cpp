@@ -11,6 +11,7 @@ EasyRespawnMgr::EasyRespawnMgr()
 {
     resurrectMapMask = MAP_MASK_ALL;
     resurrectHealthPct = 1.0f;
+    instanceRespawnLocation = RESPAWN_OUTSIDE;
 }
 
 EasyRespawnMgr::~EasyRespawnMgr()
@@ -40,7 +41,13 @@ bool EasyRespawnMgr::IsValidResurrectMapMask(const Player* player) const
         return true;
 
     if ((resurrectMapMask & MAP_MASK_OPEN_WORLD) && map->IsWorldMap())
+    {
+        AreaTableEntry const* zone = sAreaTableStore.LookupEntry(player->GetAreaId());
+        if ((zone && zone->flags & AREA_FLAG_NEED_FLY) || player->GetPositionZ() < map->GetMinHeight(player->GetPositionX(), player->GetPositionY()))
+            return false;
+
         return true;
+    }
 
     return false;
 }
@@ -52,6 +59,8 @@ void EasyRespawnMgr::Resurrect(Player* player) const
 
     player->ResurrectPlayer(resurrectHealthPct);
     player->SpawnCorpseBones();
+
+    player->RemovePlayerFlag(PLAYER_FLAGS_IS_OUT_OF_BOUNDS);
 }
 
 bool EasyRespawnMgr::IsDisabledMapId(uint32 mapId) const
@@ -73,9 +82,19 @@ bool EasyRespawnMgr::RespawnAndTeleport(Player* player) const
     Map* map = player->GetMap();
     if (map->IsDungeon())
     {
-        if (AreaTriggerTeleport const* at = sObjectMgr->GetMapEntranceTrigger(map->GetId()))
+        AreaTriggerTeleport const* chosenTrigger = nullptr;
+        if (instanceRespawnLocation == RESPAWN_INSIDE)
+            chosenTrigger = sObjectMgr->GetMapEntranceTrigger(map->GetId());
+        else
         {
-            player->TeleportTo(at->target_mapId, at->target_X, at->target_Y, at->target_Z, at->target_Orientation);
+            chosenTrigger = sObjectMgr->GetGoBackTrigger(map->GetId());
+            if (chosenTrigger == nullptr)
+                chosenTrigger = sObjectMgr->GetMapEntranceTrigger(map->GetId());
+        }
+
+        if (chosenTrigger != nullptr)
+        {
+            player->TeleportTo(chosenTrigger->target_mapId, chosenTrigger->target_X, chosenTrigger->target_Y, chosenTrigger->target_Z, chosenTrigger->target_Orientation);
             Resurrect(player);
             return true;
         }
@@ -87,7 +106,7 @@ bool EasyRespawnMgr::RespawnAndTeleport(Player* player) const
     return true;
 }
 
-void EasyRespawnMgr::HandleConfigSettings(int32 resurrectMapMask, float resurrectHealthPct, const std::string& disabledMapIdsStr)
+void EasyRespawnMgr::HandleConfigSettings(int32 resurrectMapMask, float resurrectHealthPct, const std::string& disabledMapIdsStr, int32 instanceRespawnLocation)
 {
     if ((resurrectMapMask & ~MAP_MASK_ALL) == 0)
         this->resurrectMapMask = resurrectMapMask;
@@ -98,6 +117,11 @@ void EasyRespawnMgr::HandleConfigSettings(int32 resurrectMapMask, float resurrec
         this->resurrectHealthPct = resurrectHealthPct;
     else
         this->resurrectHealthPct = 1.0f;
+
+    if (instanceRespawnLocation >= RESPAWN_INSIDE && instanceRespawnLocation <= RESPAWN_OUTSIDE)
+        this->instanceRespawnLocation = (InstanceRespawnLocation)instanceRespawnLocation;
+    else
+        this->instanceRespawnLocation = RESPAWN_OUTSIDE;
 
     CreateDisabledMapIdSet(disabledMapIdsStr);
 }
