@@ -21,7 +21,7 @@ Open **mod_easy_respawn.conf** and check **EasyRespawn.ResurrectMapMask** option
 
 Easily disable specific maps by using **EasyRespawn.DisabledMapIds** option, just add the map ids separated by a comma.
 
-If you want to override the respawn location for certain maps, you just need to add it to config file: **EasyRespawn.OverrideRespawnLocation.YOUR_MAP_ID=new_map_id,new_pos_x,new_pos_y,new_pos_z,new_orientation**. An override is already provided there for Icecrown Citadel (map id 631).
+If you want to override the respawn location for certain maps, you just need to add it to config file (just add another config line): **EasyRespawn.OverrideRespawnLocation.YOUR_MAP_ID=new_map_id,new_pos_x,new_pos_y,new_pos_z,new_orientation**. An override is already provided there for Icecrown Citadel (map id 631).
 
 ## Credits
 - silviu20092
