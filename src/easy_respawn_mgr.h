@@ -22,6 +22,12 @@ enum InstanceRespawnLocation
     RESPAWN_OUTSIDE
 };
 
+enum OpenWorldRespawnLocation
+{
+    RESPAWN_IMMEDIATE = 1,
+    RESPAWN_AT_GRAVEYARD
+};
+
 class EasyRespawnMgr
 {
 private:
@@ -32,6 +38,7 @@ private:
     float resurrectHealthPct;
     std::set<int32> disabledMapIds;
     InstanceRespawnLocation instanceRespawnLocation;
+    OpenWorldRespawnLocation openWorldRespawnLocation;
 
     bool IsValidResurrectMapMask(const Player* player) const;
     void Resurrect(Player* player) const;
@@ -46,7 +53,8 @@ public:
         int32 resurrectMapMask,
         float resurrectHealthPct,
         const std::string& disabledMapIdsStr,
-        int32 instanceRespawnLocation
+        int32 instanceRespawnLocation,
+        int32 openWorldRespawnLocation
     );
 };
 

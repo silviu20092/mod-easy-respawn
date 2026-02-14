@@ -9,7 +9,7 @@
 ########################################
 #
 #    EasyRespawn.ResurrectMapMask
-#        Description: Specifies a mask (bitwise or) specifying where the system is active.
+#        Description: Specifies a mask (bitwise or) specifying where the system is active. The system takes effect for playerbots aswell.
 #        Values: 0 - Disabled
 #                1 - Works in dungeons
 #                2 - Works in raids
@@ -50,3 +50,14 @@ EasyRespawn.DisabledMapIds =
 #
 
 EasyRespawn.InstanceRespawnLocation = 2
+
+#
+#    EasyRespawn.OpenWorldRespawnLocation
+#        Description: Determines where the player respawns when resurrecting in open world.
+#        Values: 1 - respawns immediately right at the corpse location
+#                2 - respawns at the nearest graveyard (recommended)
+#        Default: 2
+#        Note: If set to 1 the player will immediately respawn (maybe even with full HP if EasyRespawn.ResurrectPct is 1) so this can affect open world PVP experience for example.
+#
+
+EasyRespawn.OpenWorldRespawnLocation = 2
