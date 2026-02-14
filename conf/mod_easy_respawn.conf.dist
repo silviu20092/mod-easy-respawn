@@ -70,6 +70,5 @@ EasyRespawn.OpenWorldRespawnLocation = 2
 #            EasyRespawn.OverrideRespawnLocation.631 = 571,5788.0806,2071.0225,636.0642,3.6041362
 #            This will overwrite the respawn location from map 631 (ICC) to the new coordinates: map 571 (Northrend), x = 5788.0806,  y = 2071.0225, z = 636.0642, o = 3.6041362
 #
-#
 
 EasyRespawn.OverrideRespawnLocation.631 = 571,5788.0806,2071.0225,636.0642,3.6041362
