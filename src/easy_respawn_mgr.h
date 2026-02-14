@@ -39,12 +39,16 @@ private:
     std::set<int32> disabledMapIds;
     InstanceRespawnLocation instanceRespawnLocation;
     OpenWorldRespawnLocation openWorldRespawnLocation;
+    std::unordered_map<uint32, WorldLocation> overrideLocations;
 
     bool IsValidResurrectMapMask(const Player* player) const;
     void Resurrect(Player* player) const;
 
     bool IsDisabledMapId(uint32 mapId) const;
     void CreateDisabledMapIdSet(const std::string& disabledMapIdsStr);
+
+    void CreateOverrideLocations(const std::vector<std::string>& overrides);
+    const WorldLocation* ChooseOverrideLocation(uint32 mapId) const;
 public:
     static EasyRespawnMgr* instance();
 
@@ -54,7 +58,8 @@ public:
         float resurrectHealthPct,
         const std::string& disabledMapIdsStr,
         int32 instanceRespawnLocation,
-        int32 openWorldRespawnLocation
+        int32 openWorldRespawnLocation,
+        const std::vector<std::string>& overrides
     );
 };
 

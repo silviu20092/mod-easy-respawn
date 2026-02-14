@@ -81,37 +81,47 @@ bool EasyRespawnMgr::RespawnAndTeleport(Player* player) const
 
     Map* map = player->GetMap();
     bool resurrect = false;
-    if (map->IsDungeon())
-    {
-        AreaTriggerTeleport const* chosenTrigger = nullptr;
-        if (instanceRespawnLocation == RESPAWN_INSIDE)
-            chosenTrigger = sObjectMgr->GetMapEntranceTrigger(map->GetId());
-        else
-        {
-            chosenTrigger = sObjectMgr->GetGoBackTrigger(map->GetId());
-            if (chosenTrigger == nullptr)
-                chosenTrigger = sObjectMgr->GetMapEntranceTrigger(map->GetId());
-        }
 
-        if (chosenTrigger != nullptr)
-        {
-            player->TeleportTo(chosenTrigger->target_mapId, chosenTrigger->target_X, chosenTrigger->target_Y, chosenTrigger->target_Z, chosenTrigger->target_Orientation);
-            resurrect = true;
-        }
+    const WorldLocation* overrideLocation = ChooseOverrideLocation(map->GetId());
+    if (overrideLocation != nullptr)
+    {
+        player->TeleportTo(overrideLocation->GetMapId(), overrideLocation->GetPositionX(), overrideLocation->GetPositionY(), overrideLocation->GetPositionZ(), overrideLocation->GetOrientation());
+        resurrect = true;
     }
     else
     {
-        if (player->GetPositionZ() >= map->GetMinHeight(player->GetPositionX(), player->GetPositionY()))
+        if (map->IsDungeon())
         {
-            if (openWorldRespawnLocation == RESPAWN_AT_GRAVEYARD)
+            AreaTriggerTeleport const* chosenTrigger = nullptr;
+            if (instanceRespawnLocation == RESPAWN_INSIDE)
+                chosenTrigger = sObjectMgr->GetMapEntranceTrigger(map->GetId());
+            else
             {
-                GraveyardStruct const* closestGrave = sGraveyard->GetClosestGraveyard(player, player->GetTeamId());
-                if (closestGrave != nullptr)
-                    player->TeleportTo(closestGrave->Map, closestGrave->x, closestGrave->y, closestGrave->z, player->GetOrientation());
-                else
-                    player->TeleportTo(player->m_homebindMapId, player->m_homebindX, player->m_homebindY, player->m_homebindZ, player->GetOrientation());
+                chosenTrigger = sObjectMgr->GetGoBackTrigger(map->GetId());
+                if (chosenTrigger == nullptr)
+                    chosenTrigger = sObjectMgr->GetMapEntranceTrigger(map->GetId());
             }
-            resurrect = true;
+
+            if (chosenTrigger != nullptr)
+            {
+                player->TeleportTo(chosenTrigger->target_mapId, chosenTrigger->target_X, chosenTrigger->target_Y, chosenTrigger->target_Z, chosenTrigger->target_Orientation);
+                resurrect = true;
+            }
+        }
+        else
+        {
+            if (player->GetPositionZ() >= map->GetMinHeight(player->GetPositionX(), player->GetPositionY()))
+            {
+                if (openWorldRespawnLocation == RESPAWN_AT_GRAVEYARD)
+                {
+                    GraveyardStruct const* closestGrave = sGraveyard->GetClosestGraveyard(player, player->GetTeamId());
+                    if (closestGrave != nullptr)
+                        player->TeleportTo(closestGrave->Map, closestGrave->x, closestGrave->y, closestGrave->z, player->GetOrientation());
+                    else
+                        player->TeleportTo(player->m_homebindMapId, player->m_homebindX, player->m_homebindY, player->m_homebindZ, player->GetOrientation());
+                }
+                resurrect = true;
+            }
         }
     }
 
@@ -121,7 +131,8 @@ bool EasyRespawnMgr::RespawnAndTeleport(Player* player) const
     return resurrect;
 }
 
-void EasyRespawnMgr::HandleConfigSettings(int32 resurrectMapMask, float resurrectHealthPct, const std::string& disabledMapIdsStr, int32 instanceRespawnLocation, int32 openWorldRespawnLocation)
+void EasyRespawnMgr::HandleConfigSettings(int32 resurrectMapMask, float resurrectHealthPct, const std::string& disabledMapIdsStr, int32 instanceRespawnLocation, int32 openWorldRespawnLocation,
+    const std::vector<std::string>& overrides)
 {
     if ((resurrectMapMask & ~MAP_MASK_ALL) == 0)
         this->resurrectMapMask = resurrectMapMask;
@@ -144,6 +155,7 @@ void EasyRespawnMgr::HandleConfigSettings(int32 resurrectMapMask, float resurrec
         this->openWorldRespawnLocation = RESPAWN_AT_GRAVEYARD;
 
     CreateDisabledMapIdSet(disabledMapIdsStr);
+    CreateOverrideLocations(overrides);
 }
 
 void EasyRespawnMgr::CreateDisabledMapIdSet(const std::string& disabledMapIdsStr)
@@ -156,4 +168,42 @@ void EasyRespawnMgr::CreateDisabledMapIdSet(const std::string& disabledMapIdsStr
         std::inserter(disabledMapIds, disabledMapIds.end()),
         [](const std::string_view& str) { return *Acore::StringTo<int32>(str); }
     );
+}
+
+void EasyRespawnMgr::CreateOverrideLocations(const std::vector<std::string>& overrides)
+{
+    overrideLocations.clear();
+    for (const std::string& o : overrides)
+    {
+        std::string overrideLocationStr = sConfigMgr->GetOption<std::string>(o, "");
+        if (!overrideLocationStr.empty())
+        {
+            std::string::size_type lastDotIndex = o.find_last_of('.');
+            if (lastDotIndex == o.length() - 1)
+                continue;
+
+            std::vector<std::string_view> tokenized = Acore::Tokenize(overrideLocationStr, ',', false);
+            if (tokenized.size() != 5) // must match map_id,x,y,z,o
+                continue;
+
+            WorldLocation location;
+            location.WorldRelocate(
+                *Acore::StringTo<uint32>(tokenized[0]),
+                *Acore::StringTo<float> (tokenized[1]),
+                *Acore::StringTo<float> (tokenized[2]),
+                *Acore::StringTo<float> (tokenized[3]),
+                *Acore::StringTo<float> (tokenized[4])
+            );
+
+            overrideLocations[*Acore::StringTo<uint32>(o.substr(lastDotIndex + 1))] = location;
+        }
+    }
+}
+
+const WorldLocation* EasyRespawnMgr::ChooseOverrideLocation(uint32 mapId) const
+{
+    if (overrideLocations.find(mapId) != overrideLocations.end())
+        return &overrideLocations.at(mapId);
+
+    return nullptr;
 }

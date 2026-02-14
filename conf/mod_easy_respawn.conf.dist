@@ -61,3 +61,15 @@ EasyRespawn.InstanceRespawnLocation = 2
 #
 
 EasyRespawn.OpenWorldRespawnLocation = 2
+
+#
+#    EasyRespawn.OverrideRespawnLocation.[MAP_ID]
+#        Description: Be able to override default respawn location for specific maps.
+#        Values: EasyRespawn.OverrideRespawnLocation.[MAP_ID] = new_map_id,pos_x,pos_y,pos_z,orientation
+#        Example:
+#            EasyRespawn.OverrideRespawnLocation.631 = 571,5788.0806,2071.0225,636.0642,3.6041362
+#            This will overwrite the respawn location from map 631 (ICC) to the new coordinates: map 571 (Northrend), x = 5788.0806,  y = 2071.0225, z = 636.0642, o = 3.6041362
+#
+#
+
+EasyRespawn.OverrideRespawnLocation.631 = 571,5788.0806,2071.0225,636.0642,3.6041362

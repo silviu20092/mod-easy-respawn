@@ -22,7 +22,8 @@ public:
             sConfigMgr->GetOption<float>("EasyRespawn.ResurrectPct", 1.0f),
             sConfigMgr->GetOption<std::string>("EasyRespawn.DisabledMapIds", ""),
             sConfigMgr->GetOption<int32>("EasyRespawn.InstanceRespawnLocation", RESPAWN_OUTSIDE),
-            sConfigMgr->GetOption<int32>("EasyRespawn.OpenWorldRespawnLocation", RESPAWN_AT_GRAVEYARD)
+            sConfigMgr->GetOption<int32>("EasyRespawn.OpenWorldRespawnLocation", RESPAWN_AT_GRAVEYARD),
+            sConfigMgr->GetKeysByString("EasyRespawn.OverrideRespawnLocation.")
         );
     }
 };
