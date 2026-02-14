@@ -121,7 +121,10 @@ bool EasyRespawnMgr::RespawnAndTeleport(Player* player) const
                         player->TeleportTo(player->m_homebindMapId, player->m_homebindX, player->m_homebindY, player->m_homebindZ, player->GetOrientation());
                 }
                 else if (openWorldRespawnLocation == RESPAWN_AT_CORPSE)
+                {
+                    player->RemovePlayerFlag(PLAYER_FLAGS_IS_OUT_OF_BOUNDS);
                     return true;
+                }
 
                 resurrect = true;
             }
