@@ -120,6 +120,9 @@ bool EasyRespawnMgr::RespawnAndTeleport(Player* player) const
                     else
                         player->TeleportTo(player->m_homebindMapId, player->m_homebindX, player->m_homebindY, player->m_homebindZ, player->GetOrientation());
                 }
+                else if (openWorldRespawnLocation == RESPAWN_AT_CORPSE)
+                    return true;
+
                 resurrect = true;
             }
         }
@@ -149,7 +152,7 @@ void EasyRespawnMgr::HandleConfigSettings(int32 resurrectMapMask, float resurrec
     else
         this->instanceRespawnLocation = RESPAWN_OUTSIDE;
 
-    if (openWorldRespawnLocation >= RESPAWN_IMMEDIATE && openWorldRespawnLocation <= RESPAWN_AT_GRAVEYARD)
+    if (openWorldRespawnLocation >= RESPAWN_IMMEDIATE && openWorldRespawnLocation <= RESPAWN_AT_CORPSE)
         this->openWorldRespawnLocation = (OpenWorldRespawnLocation)openWorldRespawnLocation;
     else
         this->openWorldRespawnLocation = RESPAWN_AT_GRAVEYARD;

@@ -55,7 +55,8 @@ EasyRespawn.InstanceRespawnLocation = 2
 #    EasyRespawn.OpenWorldRespawnLocation
 #        Description: Determines where the player respawns when resurrecting in open world.
 #        Values: 1 - respawns immediately right at the corpse location
-#                2 - respawns at the nearest graveyard (recommended)
+#                2 - respawns at the nearest graveyard
+#                3 - respawns on top of the corpse (but stays ghost). This basically prevents the runback to the corpse in ghost form but you still need to wait the required time until resurrection is possible.
 #        Default: 2
 #        Note: If set to 1 the player will immediately respawn (maybe even with full HP if EasyRespawn.ResurrectPct is 1) so this can affect open world PVP experience for example.
 #

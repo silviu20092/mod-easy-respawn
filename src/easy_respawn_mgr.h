@@ -25,7 +25,8 @@ enum InstanceRespawnLocation
 enum OpenWorldRespawnLocation
 {
     RESPAWN_IMMEDIATE = 1,
-    RESPAWN_AT_GRAVEYARD
+    RESPAWN_AT_GRAVEYARD,
+    RESPAWN_AT_CORPSE
 };
 
 class EasyRespawnMgr
