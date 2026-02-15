@@ -8,18 +8,18 @@
 # Easy respawn module configuration
 ########################################
 #
-#    EasyRespawn.ResurrectMapMask
-#        Description: Specifies a mask (bitwise or) specifying where the system is active. The system takes effect for playerbots aswell.
+#    EasyRespawn.Active
+#        Description: Comma separated values specifying where the system is active. The system takes effect for playerbots aswell.
 #        Values: 0 - Disabled
 #                1 - Works in dungeons
 #                2 - Works in raids
 #                4 - Works in open world
-#        Examples: If you want the system active in dungeons & open world only (so not in raids), just use a bitwise or between 1 and 4 (result = 5).
+#        Examples: If you want the system active in dungeons & open world only (so not in raids), just use the respective values 1,4
 #                  If you want to disable the system, just use 0
-#        Default: 7 (1 | 2 | 4) - active everywhere
+#        Default: 1,2,4 - active everywhere
 #
 
-EasyRespawn.ResurrectMapMask = 7
+EasyRespawn.Active = 1,2,4
 
 #
 #    EasyRespawn.ResurrectPct

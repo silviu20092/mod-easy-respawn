@@ -27,6 +27,19 @@ EasyRespawnMgr* EasyRespawnMgr::instance()
     return &instance;
 }
 
+void EasyRespawnMgr::CreateResurrectMapMask(const std::string& activeStr)
+{
+    int32 mask = 0;
+    std::vector<std::string_view> tokenized = Acore::Tokenize(activeStr, ',', false);
+    for (const auto& t : tokenized)
+        mask |= *Acore::StringTo<int32>(t);
+
+    if ((mask & ~MAP_MASK_ALL) == 0)
+        resurrectMapMask = mask;
+    else
+        resurrectMapMask = MAP_MASK_ALL;
+}
+
 bool EasyRespawnMgr::IsValidResurrectMapMask(const Player* player) const
 {
     Map* map = player->GetMap();
@@ -137,13 +150,10 @@ bool EasyRespawnMgr::RespawnAndTeleport(Player* player) const
     return resurrect;
 }
 
-void EasyRespawnMgr::HandleConfigSettings(int32 resurrectMapMask, float resurrectHealthPct, const std::string& disabledMapIdsStr, int32 instanceRespawnLocation, int32 openWorldRespawnLocation,
+void EasyRespawnMgr::HandleConfigSettings(const std::string& activeStr, float resurrectHealthPct, const std::string& disabledMapIdsStr, int32 instanceRespawnLocation, int32 openWorldRespawnLocation,
     const std::vector<std::string>& overrides)
 {
-    if ((resurrectMapMask & ~MAP_MASK_ALL) == 0)
-        this->resurrectMapMask = resurrectMapMask;
-    else
-        this->resurrectMapMask = MAP_MASK_ALL;
+    CreateResurrectMapMask(activeStr);
 
     if (resurrectHealthPct >= 0.1f && resurrectHealthPct <= 1.0f)
         this->resurrectHealthPct = resurrectHealthPct;

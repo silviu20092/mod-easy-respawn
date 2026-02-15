@@ -4,7 +4,7 @@
 
 ## Overview
 
-Adds the possibility for players to be resurrected and teleported to the start of dungeons/raids instead of the closest graveyard. Configuration options makes possible for players to instantly respawn in open world aswell.
+Adds the possibility for players to be resurrected and teleported to the start of dungeons/raids instead of the closest graveyard. Configuration options makes possible for players to instantly respawn in open world aswell. This module also works for playerbots and affects how they are resurrected.
 
 
 ## How to install
@@ -17,7 +17,7 @@ Adds the possibility for players to be resurrected and teleported to the start o
 
 ## How to use
 
-Open **mod_easy_respawn.conf** and check **EasyRespawn.ResurrectMapMask** option. Simply use bitwise or (you can use an online calculator) to toggle between the 3 possible options (use 0 if you want to disable the module altogether).
+Open **mod_easy_respawn.conf** and check **EasyRespawn.Active** option.
 
 Easily disable specific maps by using **EasyRespawn.DisabledMapIds** option, just add the map ids separated by a comma.
 

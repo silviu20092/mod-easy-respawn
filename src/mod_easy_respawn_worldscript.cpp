@@ -18,7 +18,7 @@ public:
     void OnAfterConfigLoad(bool reload) override
     {
         sEasyRespawnMgr->HandleConfigSettings(
-            sConfigMgr->GetOption<int32>("EasyRespawn.ResurrectMapMask", MAP_MASK_ALL),
+            sConfigMgr->GetOption<std::string>("EasyRespawn.Active", std::to_string(MAP_MASK_ALL)),
             sConfigMgr->GetOption<float>("EasyRespawn.ResurrectPct", 1.0f),
             sConfigMgr->GetOption<std::string>("EasyRespawn.DisabledMapIds", ""),
             sConfigMgr->GetOption<int32>("EasyRespawn.InstanceRespawnLocation", RESPAWN_OUTSIDE),

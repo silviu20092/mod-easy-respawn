@@ -42,6 +42,8 @@ private:
     OpenWorldRespawnLocation openWorldRespawnLocation;
     std::unordered_map<uint32, WorldLocation> overrideLocations;
 
+    void CreateResurrectMapMask(const std::string& activeStr);
+
     bool IsValidResurrectMapMask(const Player* player) const;
     void Resurrect(Player* player) const;
 
@@ -55,7 +57,7 @@ public:
 
     bool RespawnAndTeleport(Player* player) const;
     void HandleConfigSettings(
-        int32 resurrectMapMask,
+        const std::string& activeStr,
         float resurrectHealthPct,
         const std::string& disabledMapIdsStr,
         int32 instanceRespawnLocation,
