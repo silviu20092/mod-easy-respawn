@@ -68,7 +68,7 @@ bool EasyRespawnMgr::IsValidResurrectMapMask(const Player* player) const
 void EasyRespawnMgr::Resurrect(Player* player) const
 {
     player->CombatStop();
-    player->getHostileRefMgr().deleteReferences();
+    player->GetThreatMgr().RemoveMeFromThreatLists();
 
     player->ResurrectPlayer(resurrectHealthPct);
     player->SpawnCorpseBones();
